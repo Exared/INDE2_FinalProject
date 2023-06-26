@@ -10,7 +10,8 @@ lazy val root = (project in file("."))
     name := "inde2_project",
     libraryDependencies ++= Seq(
       "org.apache.kafka" % "kafka-clients" % "2.8.0",
-      "com.typesafe.play" %% "play-json" % "2.9.2"
+      "com.typesafe.play" %% "play-json" % "2.9.2",
+      "io.github.etspaceman" %% "scalacheck-faker" % "3.0.1"
     ),
     libraryDependencies += munit % Test
   )
