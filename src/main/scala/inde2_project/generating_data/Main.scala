@@ -14,30 +14,6 @@ import faker._
 
 
 object Main {
-    /* Generate json containing ID, location, list of persons, list of words, timestamp :
-    {
-      peacewatcher_id: 1,
-      location: {
-        latitude: 0.0,
-        longitude: 0.0
-      },
-      persons: [
-        {
-          name: "John Doe",
-          harmonyScore: 0.5
-        },
-        ...
-      ],
-      words: [
-        "peace",
-        "love",
-        "harmony",
-        ...
-      ],
-      timestamp: "2021-04-01T12:00:00.000"
-    }
-    On envoie ces json sur le topic "inde2_project" du broker Kafka
-    */
     def generateData(producer: KafkaProducer[String, String]) = {
         val random_words = List("peace", "love", "harmony", "happiness", "joy", "respect", "tolerance", "solidarity", "equality", "freedom", "justice", "dignity", "non-violence", "non-violent", "nonviolence", "violent", "violence", "hello", "hi", "goodbye", "bye", "good morning", "good afternoon") 
         (0 to 1000).foreach((i) => {
@@ -61,7 +37,6 @@ object Main {
     }
 
   def main(args: Array[String]): Unit = {
-        
     val props = new Properties()
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])

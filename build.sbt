@@ -14,7 +14,8 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-sql" % "3.2.1",
       "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.2.1",
       "org.apache.spark" %% "spark-streaming" % "3.2.1",
-      "org.scalameta" %% "munit" % "0.7.29"
+      "org.scalameta" %% "munit" % "0.7.29",
+      "software.amazon.awssdk" % "s3" % "2.17.52"
     ),
   )
 
