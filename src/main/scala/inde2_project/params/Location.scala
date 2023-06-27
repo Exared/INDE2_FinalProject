@@ -1,4 +1,4 @@
-package data
+package params
 
 import play.api.libs.json.{Json, OFormat}
 

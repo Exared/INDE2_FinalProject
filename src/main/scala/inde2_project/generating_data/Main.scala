@@ -1,10 +1,7 @@
 package droneSimulator
-
-import data._
-
+import params._
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
 import org.apache.kafka.common.serialization.StringDeserializer
-
 import scala.collection.JavaConverters._
 import java.util.Properties
 import play.api.libs.json._
@@ -57,7 +54,7 @@ object Main {
             )
             val eventJsonString = Json.stringify(Json.toJson(event))
             println(eventJsonString)
-            val record = new ProducerRecord[String, String]("inde2_project", "event", eventJsonString)
+            val record = new ProducerRecord[String, String]("dataPerson", "event", eventJsonString)
             producer.send(record)
             Thread.sleep(60000)
         })
@@ -70,7 +67,6 @@ object Main {
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
     val producer : KafkaProducer[String, String] = new KafkaProducer[String, String](props)
-
     generateData(producer)
     producer.close()
     }

@@ -1,36 +1,35 @@
 package alertHandler
+import params._
 import java.util.Properties
 import play.api.libs.json._
 import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.spark.streaming.kafka010._
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
-import org.apache.spark.streaming.kafka010.LocationStrategies._
+import org.apache.spark.streaming.kafka010._
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.SparkConf
 import org.apache.log4j.{Level, Logger}
+
 object Main {
  def main(args: Array[String]): Unit = {
-        Logger.getLogger("org").setLevel(Level.ERROR)
-
-        val sparkConf = new SparkConf()
-            .setAppName("peaceland_alert")
+        val sparkConfig = new SparkConf()
+            .setAppName("harmonyAlert")
             .setMaster("local[*]")
             .set("spark.driver.host", "127.0.0.1")
-
-        val ssc = new StreamingContext(sparkConf, Seconds(5))
+        val ssc = new StreamingContext(sparkConfig, Seconds(5))
 
         val kafkaParams = Map(
             "bootstrap.servers" -> "localhost:9092",
             "key.deserializer" -> classOf[StringDeserializer],
             "value.deserializer" -> classOf[StringDeserializer],
-            "group.id" -> "alert_consumer"
+            "group.id" -> "Alerts"
         )
         
-        val topics = Array("peaceland")
+        val topics = Array("dataPerson")
 
-        val stream = KafkaUtils.createDirectStream[String, String](
+        val new_stream = KafkaUtils.createDirectStream[String, String](
             ssc,
             PreferConsistent,
             Subscribe[String,String](topics, kafkaParams)
@@ -43,31 +42,37 @@ object Main {
         
         val sparkContext = ssc.sparkContext
         val kafkaSink = sparkContext.broadcast(KafkaSink(props))
-
-        stream.flatMap(record => {
-            val json = Json.parse(record.value())
-            Event.EventFormatter.reads(json).asOpt
-        }).filter(event => {
-            val dangerous_persons = event.persons.filter(person => person.peacescore < 0.1)
-            dangerous_persons.foreach(person => println(s"[ALERT] ${person.name} is dangerous with ${person.peacescore} as peacescore."))
+      
+        new_stream.flatMap(report => {
+            val json = Json.parse(report.value())
+            Report.ReportFormatter.reads(json).asOpt
+        })
+        .filter(report => {
+            val dangerous_persons = report.persons.filter(person => person.harmonyScore < 0.1)
+            dangerous_persons.foreach(person => println(s"[ALERT] ${person.name} is dangerous with ${person.harmonyScore} as peacescore."))
             dangerous_persons.length != 0
-        }).map({event =>
-            val new_alert = Alert(
-                event.peacewatcher_id,
-                event.timestamp,
-                event.location,
-                event.words,
-                event.persons.filter(person => person.peacescore < 0.1),
-                event.battery,
-                event.temperature)
-            val alertJsonString = Json.stringify(Json.toJson(new_alert))
-            alertJsonString
-        }).foreachRDD({ rdd =>
-            rdd.foreach({alertJsonString =>
-                kafkaSink.value.send("alert", "event_alert", alertJsonString)
+        })
+        .map({report_with_dangerous_person =>
+                val all_alerts = report_with_dangerous_person.persons.filter(person=>person.harmonyScore<0.1).map(person_danger =>{
+                val new_alert = Alert(
+                report_with_dangerous_person.drone_id,
+                report_with_dangerous_person.location,
+                person_danger.name)
+                val alertJsonString = Json.stringify(Json.toJson(new_alert))
+                alertJsonString
+                }
+            )
+            all_alerts
+        })
+        .foreachRDD({ rdd =>
+            rdd.foreach({alerts =>{
+              alerts.foreach(alert => {
+                println(s"VOICI LE CONTENUE DE ALERT\n\n\n\n\n\n${alert}\n\n\n\n\n\n\n\n")
+                kafkaSink.value.send("Alerts", "event_alert", alert)
+              })
+            }
           })
         })
-        
         ssc.start()
         ssc.awaitTermination()
     }
