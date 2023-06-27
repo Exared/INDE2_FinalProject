@@ -1,36 +1,74 @@
 package alertHandler
-import java.time.Duration
 import java.util.Properties
-import java.util.Collections
+import play.api.libs.json._
+import org.apache.kafka.common.serialization.{StringDeserializer, StringSerializer}
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.serialization.StringDeserializer
-import scala.collection.JavaConverters._
-
-
+import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.spark.streaming.kafka010._
+import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
+import org.apache.spark.streaming.kafka010.LocationStrategies._
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.SparkConf
+import org.apache.log4j.{Level, Logger}
 object Main {
-  def main(args: Array[String]): Unit = {
-    val props = new Properties()
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, "drone-consumer-group")
-    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, classOf[StringDeserializer])
+ def main(args: Array[String]): Unit = {
+        Logger.getLogger("org").setLevel(Level.ERROR)
 
-    val consumer = new KafkaConsumer[String, String](props)
+        val sparkConf = new SparkConf()
+            .setAppName("peaceland_alert")
+            .setMaster("local[*]")
+            .set("spark.driver.host", "127.0.0.1")
 
-    consumer.subscribe(Collections.singletonList("inde2_project"))
+        val ssc = new StreamingContext(sparkConf, Seconds(5))
 
-    try {
-      while (true) {
-        val records = consumer.poll(100)
-        for (record <- records.asScala) {
-          println(s"Key: ${record.key()}, Value: ${record.value()}")
-        }
-      }
-    } catch {
-      case e: Exception => e.printStackTrace()
-    } finally {
-      consumer.close()
+        val kafkaParams = Map(
+            "bootstrap.servers" -> "localhost:9092",
+            "key.deserializer" -> classOf[StringDeserializer],
+            "value.deserializer" -> classOf[StringDeserializer],
+            "group.id" -> "alert_consumer"
+        )
+        
+        val topics = Array("peaceland")
+
+        val stream = KafkaUtils.createDirectStream[String, String](
+            ssc,
+            PreferConsistent,
+            Subscribe[String,String](topics, kafkaParams)
+        )
+
+        val props = new Properties()
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
+        
+        val sparkContext = ssc.sparkContext
+        val kafkaSink = sparkContext.broadcast(KafkaSink(props))
+
+        stream.flatMap(record => {
+            val json = Json.parse(record.value())
+            Event.EventFormatter.reads(json).asOpt
+        }).filter(event => {
+            val dangerous_persons = event.persons.filter(person => person.peacescore < 0.1)
+            dangerous_persons.foreach(person => println(s"[ALERT] ${person.name} is dangerous with ${person.peacescore} as peacescore."))
+            dangerous_persons.length != 0
+        }).map({event =>
+            val new_alert = Alert(
+                event.peacewatcher_id,
+                event.timestamp,
+                event.location,
+                event.words,
+                event.persons.filter(person => person.peacescore < 0.1),
+                event.battery,
+                event.temperature)
+            val alertJsonString = Json.stringify(Json.toJson(new_alert))
+            alertJsonString
+        }).foreachRDD({ rdd =>
+            rdd.foreach({alertJsonString =>
+                kafkaSink.value.send("alert", "event_alert", alertJsonString)
+          })
+        })
+        
+        ssc.start()
+        ssc.awaitTermination()
     }
-  }
 }
