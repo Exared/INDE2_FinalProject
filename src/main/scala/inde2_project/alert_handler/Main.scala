@@ -1,4 +1,4 @@
-package consumingData
+package alertHandler
 import java.time.Duration
 import java.util.Properties
 import java.util.Collections
@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import scala.collection.JavaConverters._
+
 
 object Main {
   def main(args: Array[String]): Unit = {
