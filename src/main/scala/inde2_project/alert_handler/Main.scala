@@ -64,7 +64,6 @@ object Main {
         .foreachRDD({ rdd =>
             rdd.foreach({alerts =>{
               alerts.foreach(alert => {
-                println(s"VOICI LE CONTENUE DE ALERT\n\n\n\n\n\n${alert}\n\n\n\n\n\n\n\n")
                 kafkaSink.value.send("Alerts", "event_alert", alert)
               })
             }
