@@ -1,0 +1,7 @@
+project/
+target/
+front-end/node_modules
+front-end/package-lock.json
+api/node_modules
+api/package-lock.json
+
