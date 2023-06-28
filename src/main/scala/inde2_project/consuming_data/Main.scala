@@ -17,7 +17,7 @@ object Main {
 
     val consumer = new KafkaConsumer[String, String](props)
 
-    consumer.subscribe(Collections.singletonList("dataPerson"))
+    consumer.subscribe(Collections.singletonList("Alerts"))
 
     try {
       while (true) {
