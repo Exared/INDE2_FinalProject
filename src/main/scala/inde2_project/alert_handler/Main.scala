@@ -19,16 +19,13 @@ object Main {
             .setMaster("local[*]")
             .set("spark.driver.host", "127.0.0.1")
         val ssc = new StreamingContext(sparkConfig, Seconds(5))
-
         val kafkaParams = Map(
             "bootstrap.servers" -> "localhost:9092",
             "key.deserializer" -> classOf[StringDeserializer],
             "value.deserializer" -> classOf[StringDeserializer],
             "group.id" -> "Alerts"
         )
-        
         val topics = Array("dataPerson")
-
         val new_stream = KafkaUtils.createDirectStream[String, String](
             ssc,
             PreferConsistent,
