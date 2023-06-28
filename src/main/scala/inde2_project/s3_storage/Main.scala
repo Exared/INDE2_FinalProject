@@ -12,7 +12,10 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import java.nio.file.Paths
 import java.util.Collections
 import java.nio.file.Files
-
+import play.api.libs.json.{JsValue, Json}
+import java.io.ByteArrayInputStream
+import software.amazon.awssdk.core.sync.RequestBody
+import com.typesafe.config.ConfigFactory
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -25,10 +28,14 @@ object Main {
     val consumer = new KafkaConsumer[String, String](props)
 
     consumer.subscribe(Collections.singletonList("dataPerson"))
+    
+    val conf = ConfigFactory.load()
+    val accessKeyId = conf.getString("aws.accessKeyId")
+    val secretAccessKey = conf.getString("aws.secretAccessKey")
 
     val credentials = StaticCredentialsProvider.create(AwsBasicCredentials.create(
-      System.getenv("AKIA3KDI3IXQYTR5MBO7"),
-      System.getenv("i6DKrAtnTkFRrIYo/RCdPi7NEc9FecfVldxTXUWo")
+      accessKeyId,
+      secretAccessKey
     ))
 
     // Create S3 client
@@ -43,13 +50,21 @@ object Main {
       while (true) {
         val records = consumer.poll(100)
         for (record <- records.asScala) {
-          // Instead of printing, write to S3
-          val content = s"Key: ${record.key()}, Value: ${record.value()}"
+          val json: JsValue = Json.parse(record.value())
+    
+          // Convert the JSON object to a string
+          val jsonString: String = Json.stringify(json)
 
-          val filePath = Paths.get("/tmp/data.txt")  // Replace with your file path
-          Files.write(filePath, content.getBytes)
+          // Convert the JSON string to an InputStream
+          val stream = new ByteArrayInputStream(jsonString.getBytes)
 
-          s3.putObject(PutObjectRequest.builder().bucket(bucketName).key("data.txt").build(), filePath)
+          // Upload directly to S3
+          val drone_id: String = (json \ "drone_id").as[Long].toString
+          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"  // Note the .json extension
+          s3.putObject(
+            PutObjectRequest.builder().bucket(bucketName).key(fileName).build(),
+            RequestBody.fromInputStream(stream, jsonString.length)  // Use jsonString.length here
+          )
         }
       }
     } catch {
