@@ -29,9 +29,7 @@ object Main {
         spark.sparkContext.hadoopConfiguration.set("fs.s3a.secret.key", secretAccessKey)
         spark.sparkContext.hadoopConfiguration.set("fs.s3a.endpoint", "s3.amazonaws.com")
 
-        val filePath = "s3a://inde2storage"
-        val fileExtension = "json"
-        val obj = sparkContext.objectFile(filePath + "/*." + fileExtension).map((obj : SaveReport) =>
+        val obj = sparkContext.objectFile("s3a://inde2storage/" + "*" + ".json").map((obj : SaveReport) =>
             SaveReport(
             obj.drone_id,
             obj.location,
