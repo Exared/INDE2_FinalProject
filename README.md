@@ -17,17 +17,16 @@ Our Project contains 7 folders :
 - s3_storage
 
 ## api_alerts
-    In this folder you will find everything related to the creation of an API to permit the front-end to have access to the data that
-    is stored in Kafka's STREAM. Please read the README in this directory.
+In this folder you will find everything related to the creation of an API to permit the front-end to have access to the data that is stored in Kafka's STREAM. Please read the README in this directory.
     
 ## front-end
-    In this folder you will find every file concerning the creation of our front-end to permit the harmonyWatchers to have access to all the alerts and the statistics. Please read the README in this directory.
+In this folder you will find every file concerning the creation of our front-end to permit the harmonyWatchers to have access to all the alerts and the statistics. Please read the README in this directory.
 
 ## params
-    In this folder you will find the declaration of our classes that are used in the alerts and drone simulation. You will also find the Json formatter for each one of them.
+In this folder you will find the declaration of our classes that are used in the alerts and drone simulation. You will also find the Json formatter for each one of them.
 
 ## generating_data
-    In this folder you will find the Main that is used to generate data which simulates the harmonywatchers scanning the city and sending information that they are getting.
+In this folder you will find the Main that is used to generate data which simulates the harmonywatchers scanning the city and sending information that they are getting.
     
 5 files :
 - build.sbt
