@@ -7,22 +7,34 @@ We chose this architecture from the program that we created :
 ![Architecture](https://github.com/Exared/INDE2_FinalProject/assets/89941855/5f26f93b-c75b-4019-bfb8-1f97e217413f)
 
 
-Our Project contains 3 folders :
-    -api
-    -front-end
-    -src
+Our Project contains 7 folders :
+- alert_handler
+- api_alerts
+- data_analysis
+- front-end
+- generating_data
+- params
+- s3_storage
 
-## api
+## api_alerts
     In this folder you will find everything related to the creation of an API to permit the front-end to have access to the data that
     is stored in Kafka's STREAM. Please read the README in this directory.
+    
 ## front-end
-    In this folder you will find every files conercing the creation of our front-end to permit the harmonyWatchers to have access to all the alerts and the statistics. Please read the README in this directory.
+    In this folder you will find every file concerning the creation of our front-end to permit the harmonyWatchers to have access to all the alerts and the statistics. Please read the README in this directory.
 
-## src
-    It contains every scala file that permits us to manage this data structure
-2 files :
-    -build.sbt
-    -README.md
+## params
+    In this folder you will find the declaration of our classes that are used in the alerts and drone simulation. You will also find the Json formatter for each one of them.
+
+## generating_data
+    In this folder you will find the Main that is used to generate data which simulates the harmonywatchers scanning the city and sending information that they are getting.
+    
+5 files :
+- build.sbt
+- README.md
+- Architecture.png
+- SoutenanceFinale.pptx
+- .gitignore
 
 # Usage
 
