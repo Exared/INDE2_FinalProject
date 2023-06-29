@@ -15,7 +15,15 @@ lazy val root = (project in file("."))
       "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.2.1",
       "org.apache.spark" %% "spark-streaming" % "3.2.1",
       "org.scalameta" %% "munit" % "0.7.29",
-      "software.amazon.awssdk" % "s3" % "2.17.52"
+      "software.amazon.awssdk" % "s3" % "2.17.52",
+      "org.apache.hadoop" % "hadoop-client" % "3.1.2",
+      "org.apache.hadoop" % "hadoop-aws" % "3.1.2",
+      "org.apache.hadoop" % "hadoop-mapreduce-client-core" % "3.1.2",
+      "org.apache.hadoop" % "hadoop-common" % "3.1.2",
+      "log4j" % "log4j" % "1.2.17",
+      "com.typesafe" % "config" % "1.4.1",
+      "org.apache.hadoop" % "hadoop-aws" % "3.3.6",
+      "software.amazon.awssdk" % "s3" % "2.20.94"
     ),
   )
 

@@ -36,10 +36,8 @@ object Main {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
-        
         val sparkContext = ssc.sparkContext
         val kafkaSink = sparkContext.broadcast(KafkaSink(props))
-      
         new_stream.flatMap(report => {
             val json = Json.parse(report.value())
             Report.ReportFormatter.reads(json).asOpt

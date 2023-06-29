@@ -1,4 +1,4 @@
-package s3_storage
+package s3Storage
 
 import java.util.Properties
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer}
@@ -51,19 +51,13 @@ object Main {
         val records = consumer.poll(100)
         for (record <- records.asScala) {
           val json: JsValue = Json.parse(record.value())
-    
-          // Convert the JSON object to a string
           val jsonString: String = Json.stringify(json)
-
-          // Convert the JSON string to an InputStream
           val stream = new ByteArrayInputStream(jsonString.getBytes)
-
-          // Upload directly to S3
           val drone_id: String = (json \ "drone_id").as[Long].toString
-          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"  // Note the .json extension
+          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"
           s3.putObject(
             PutObjectRequest.builder().bucket(bucketName).key(fileName).build(),
-            RequestBody.fromInputStream(stream, jsonString.length)  // Use jsonString.length here
+            RequestBody.fromInputStream(stream, jsonString.length) 
           )
         }
       }

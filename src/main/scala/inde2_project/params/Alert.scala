@@ -5,7 +5,6 @@ import play.api.libs.json.{Json, OFormat}
 
 final case class Alert(
     drone_id : Int,
-    time: LocalDateTime,
     location: Location,
     person_name: String
 )
