@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from '../Title';
 
 function createData(time, amount) {
   return { time, amount };
@@ -24,7 +23,6 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}

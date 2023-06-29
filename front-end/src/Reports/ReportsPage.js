@@ -19,10 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { mainListItems, secondaryListItems } from '../Header/listItems';
-import Chart from '../Statistics/Chart';
-import Deposits from '../Statistics/Deposits';
 import Orders from './Orders';
-import Title from '../Title';
 
 function Copyright(props) {
   return (
@@ -85,7 +82,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const defaultTheme = createTheme();
 
-export default function Reports() {
+export default function Alert() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -93,7 +90,7 @@ export default function Reports() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex'}}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -120,7 +117,7 @@ export default function Reports() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Reports
+              Alerts
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -160,19 +157,14 @@ export default function Reports() {
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
             overflow: 'auto',
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* All Reports*/}
+          <Container maxWidth="xl" sx={{ mt:10 , mb: 10 }}>
+            <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Paper sx={{ p: 1, display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h6" component="div" sx={{ my: 2 }}>
-                All Reports
-                </Typography>
                   <Orders />
                 </Paper>
               </Grid>
@@ -182,7 +174,6 @@ export default function Reports() {
             <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
-
         
       </Box>
     </ThemeProvider>

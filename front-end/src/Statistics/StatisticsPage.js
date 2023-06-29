@@ -21,7 +21,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from '../Header/listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
-import Orders from '../Reports/Orders';
+import Orders from '../Reports/ReportsPage';
 
 function Copyright(props) {
   return (

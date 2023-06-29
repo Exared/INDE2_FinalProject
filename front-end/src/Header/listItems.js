@@ -7,29 +7,22 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import ErrorPage from './ErrorPage/ErrorPage';
-import Home from './Home/HomePage';
-import Reports from './Reports/ReportsPage';
-import Statistics from './Statistics/StatisticsPage';
 
-import {
-  Link,
-} from "react-router-dom";
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton component = {Link} to="/">
+    <ListItemButton href = "\home">
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Home" />
     </ListItemButton>
-    <ListItemButton component = {Link} to = "/reports">
+    <ListItemButton href = "\alerts">
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="All Reports" />
+      <ListItemText primary="All alerts" />
     </ListItemButton>
-    <ListItemButton component = {Link} to = "/statistics">
+    <ListItemButton href = "\statistics">
       <ListItemIcon>
         <LayersIcon />
       </ListItemIcon>
@@ -41,7 +34,7 @@ export const mainListItems = (
 export const secondaryListItems = (
   <React.Fragment>
     <ListSubheader component="div" inset>
-      Saved reports
+      Saved alerts
     </ListSubheader>
     <ListItemButton>
       <ListItemIcon>

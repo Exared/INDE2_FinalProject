@@ -19,16 +19,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import { mainListItems, secondaryListItems } from '../Header/listItems';
-import Chart from '../Statistics/Chart';
-import Deposits from '../Statistics/Deposits';
-import Orders from '../Reports/Orders';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      {'This app was made by SCIA EPITA studentsCopyright © '}
+      <Link color="inherit" href="https://epita.fr/">
+        EPITA
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -119,7 +116,7 @@ export default function Home() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Home page
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -163,38 +160,33 @@ export default function Home() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="h2" component="h1" align="center">
+                Welcome to Harmony Land's Website
+              </Typography>
+
+              <Typography variant="h5" align="center" sx ={{my:4,fontFamily : 'Playfair Display'}}>
+                            Harmonyland is a blessed country, led by an affable and clear-sighted ruler. He
+              takes great pride in its effort to bring peace, happiness, and harmony to all its
+              citizens.
+              To do so, the benevolent ruler heavily rely on his fellow harmonymakers. A
+              governmental agency dedicated to spread harmony around the country. To reach
+              their ambition, they bring assistance to any agitated person and help them to
+              recover peace and harmony. More generally they help citizen to stay in line with
+              their country harmonious goal
+
+              </Typography>
+              <Typography variant="body1" align="center">
+                Feel free to explore and enjoy our app.
+              </Typography>
+              <Typography variant="body1" align="center">
+                If you have any questions, please contact us at{' '}
+                <Link href="mailto:reyane.en-nabty@epita.fr"> reyane.en-nabty@epita.fr</Link>.
+                <Link href="mailto:reyane.en-nabty@epita.fr"> timothee.vattier@epita.fr</Link>.
+                <Link href="mailto:reyane.en-nabty@epita.fr"> theo.tinti@epita.fr</Link>.
+              </Typography>
+          </Grid>
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>

@@ -5,81 +5,80 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Title from '../Title';
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
 
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function createData(id, date, drone_id,longitude,latitude,name) {
+  return { id, date, drone_id, longitude, latitude, name};
 }
 
-const rows = [
-  createData(
-    0,
-    '16 Mar, 2019',
-    'Elvis ZEBI',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44,
-  ),
-  createData(
-    1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99,
-  ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(
-    3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39,
-  ),
-  createData(
-    4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79,
-  ),
-];
 
-function preventDefault(event) {
-  event.preventDefault();
+function preventDefault() {
+  window.location.reload();
 }
 
 export default function Orders() {
+  const [rowsa, setRowsa] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/alert');
+        setRowsa(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(rowsa[0])
   return (
     <React.Fragment>
-      <Table size="small">
+      <Typography variant="h1" component="div" sx={{ my: 5 ,textAlign:'center'}}>
+        All Alerts
+      </Typography>
+      <Link color="primary" href="/alerts" onClick={preventDefault} sx={{ mt: 3 }}>
+        Refresh Data
+      </Link>
+      <Table size="Huge">
         <TableHead>
           <TableRow>
-            <TableCell>Drone ID</TableCell>
-            <TableCell>Longitude</TableCell>
-            <TableCell>Latitude</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>
+            <Typography variant="h6" component="div">
+            Drone ID
+            </Typography>
+            </TableCell>
+            <TableCell>
+            <Typography variant="h6" component="div">
+            Longitude
+            </Typography>
+            </TableCell>
+            <TableCell>
+            <Typography variant="h6" component="div">
+            Latitude
+            </Typography>
+            </TableCell>
+            <TableCell>
+            <Typography variant="h6" component="div">
+            Name
+            </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+          {rowsa.map((row) => (
+            <TableRow>
+              <TableCell>{row.drone_id}</TableCell>
+              <TableCell>{row.drone_location.longitude}</TableCell>
+              <TableCell>{row.drone_location.latitude}</TableCell>
+              <TableCell>{row.person_name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders
-      </Link>
     </React.Fragment>
   );
 }
