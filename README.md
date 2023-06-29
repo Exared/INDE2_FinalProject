@@ -28,7 +28,7 @@ In this folder you will find the declaration of our classes that are used in the
 ## generating_data
 In this folder you will find the Main that is used to generate data which simulates the harmonywatchers scanning the city and sending information that they are getting.
     
-5 files :
+## 5 files :
 - build.sbt
 - README.md
 - Architecture.png
