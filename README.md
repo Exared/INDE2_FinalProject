@@ -16,6 +16,9 @@ Our Project contains 7 folders :
 - params
 - s3_storage
 
+## alert_handle
+In this folder you will find the Main that is used to find the citizens with a bad harmony score from the generated data by the harmonywatchers and send alerts that we then use in the api.
+
 ## api_alerts
 In this folder you will find everything related to the creation of an API to permit the front-end to have access to the data that is stored in Kafka's STREAM. Please read the README in this directory.
     
