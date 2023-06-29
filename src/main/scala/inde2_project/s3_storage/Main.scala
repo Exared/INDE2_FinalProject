@@ -47,26 +47,25 @@ object Main {
     val bucketName = "inde2storage"
 
     try {
-      while (true) {
+      val iter = Iterator.continually {
         val records = consumer.poll(100)
-        for (record <- records.asScala) {
+        records.asScala.map { record =>
           val json: JsValue = Json.parse(record.value())
-    
-          // Convert the JSON object to a string
+
           val jsonString: String = Json.stringify(json)
 
-          // Convert the JSON string to an InputStream
           val stream = new ByteArrayInputStream(jsonString.getBytes)
 
-          // Upload directly to S3
           val drone_id: String = (json \ "drone_id").as[Long].toString
-          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"  // Note the .json extension
+          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"
           s3.putObject(
             PutObjectRequest.builder().bucket(bucketName).key(fileName).build(),
-            RequestBody.fromInputStream(stream, jsonString.length)  // Use jsonString.length here
+            RequestBody.fromInputStream(stream, jsonString.length)
           )
+          true
         }
       }
+      iter.takeWhile(_.forall(identity)).foreach(_ => ())
     } catch {
       case e: Exception => e.printStackTrace()
     } finally {
