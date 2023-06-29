@@ -16,7 +16,7 @@ Our Project contains 7 folders :
 - params
 - s3_storage
 
-## alert_handle
+## alert_handler
 In this folder you will find the Main that is used to find the citizens with a bad harmony score from the generated data by the harmonywatchers and send alerts that we then use in the api.
 
 ## api_alerts
