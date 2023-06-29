@@ -2,20 +2,15 @@ package dataAnalysis
 import params._
 import play.api.libs.json._
 import java.io.FileNotFoundException
-import java.io.IOException
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter 
 import com.typesafe.config.ConfigFactory
-import scala.io.Source
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkContext, SparkConf}
-import org.apache.log4j.{Level, Logger}
 
 
 object Main {
     def main(args: Array[String]): Unit = {
         // keep only the errors
-        Logger.getLogger("org").setLevel(Level.ERROR)
         val sparkConf = new SparkConf()
         .setMaster("local[*]")
         .setAppName("data_analysis")
@@ -29,7 +24,7 @@ object Main {
         spark.sparkContext.hadoopConfiguration.set("fs.s3a.secret.key", secretAccessKey)
         spark.sparkContext.hadoopConfiguration.set("fs.s3a.endpoint", "s3.amazonaws.com")
 
-        val obj = sparkContext.objectFile("s3a://inde2storage/" + "*" + ".json").map((obj : SaveReport) =>
+        val obj = sparkContext.objectFile("s3a://inde2storage/" + "drone_1889_time_1687968104744.json").map((obj : SaveReport) =>
             SaveReport(
             obj.drone_id,
             obj.location,
