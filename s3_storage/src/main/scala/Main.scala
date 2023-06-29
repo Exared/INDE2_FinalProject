@@ -54,7 +54,8 @@ object Main {
           val jsonString: String = Json.stringify(json)
           val stream = new ByteArrayInputStream(jsonString.getBytes)
           val drone_id: String = (json \ "drone_id").as[Long].toString
-          val fileName = "drone_" + drone_id + "_time_" + System.currentTimeMillis().toString + ".json"
+          val timestamp: String = (json \ "timestamp").as[String]
+          val fileName = "drone_" + drone_id + "_time_" + timestamp + ".json"
           s3.putObject(
             PutObjectRequest.builder().bucket(bucketName).key(fileName).build(),
             RequestBody.fromInputStream(stream, jsonString.length) 

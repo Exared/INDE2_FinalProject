@@ -1,7 +1,16 @@
 project/
 target/
-front-end/node_modules
-front-end/package-lock.json
 api_alerts/node_modules
 api_alerts/package-lock.json
+front-end/node_modules
+front-end/package-lock.json
+alert_handler/target
+alert_handler/project
+data_analysis/target
+data_analysis/project
+generating_data/target
+generating_data/project
+params/target
+params/project
+
 
