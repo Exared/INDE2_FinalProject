@@ -47,9 +47,9 @@ object Main {
     val bucketName = "inde2storage"
 
     try {
-      while (true) {
+      val iter = Iterator.continually {
         val records = consumer.poll(100)
-        for (record <- records.asScala) {
+        records.asScala.map { record =>
           val json: JsValue = Json.parse(record.value())
           val jsonString: String = Json.stringify(json)
           val stream = new ByteArrayInputStream(jsonString.getBytes)
@@ -59,8 +59,10 @@ object Main {
             PutObjectRequest.builder().bucket(bucketName).key(fileName).build(),
             RequestBody.fromInputStream(stream, jsonString.length) 
           )
+          true
         }
       }
+      iter.takeWhile(_.forall(identity)).foreach(_ => ())
     } catch {
       case e: Exception => e.printStackTrace()
     } finally {
